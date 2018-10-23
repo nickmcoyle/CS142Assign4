@@ -13,7 +13,7 @@ public class Student
     private double balance;
     private boolean CSC110;
     private boolean CSC142;
-    private boolean CSC143;
+    private boolean CSC143;   
 
     Student(String firstName, String lastName, String id) {
         this(firstName, lastName, id, false, false, false);
@@ -48,7 +48,7 @@ public class Student
         return CSC142;
     }
 
-    public boolean gettCSC143() {
+    public boolean getCSC143() {
         return CSC143;
     }
 
@@ -80,7 +80,9 @@ public class Student
     public void setID(String id) {
         if(id.equals(" ")) {
             throw new IllegalArgumentException("ID cannot be blank");
-        }
+        } else if (!id.matches("[0-9]{5,}")) {
+            throw new IllegalArgumentException("ID is invalid, format must be like 111223333");
+        }        
         
         this.id = id;
     }
@@ -97,4 +99,7 @@ public class Student
         this.CSC143 = csc143;
     }
 
+    public static void test() {
+    
+    }
 }
