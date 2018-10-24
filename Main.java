@@ -24,6 +24,9 @@ public class Main
         }
         System.out.println(newDep.toString());
         
+        Student.test();
+        Department.test();
+        
         // System.out.println("How to compare two variables with float point.");
         // double num1 = 10 / 3.0;
         // double num2 = 3.333334;

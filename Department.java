@@ -10,17 +10,25 @@ public class Department
     private int totalCSC110;
     private int totalCSC142;
     private int totalCSC143;
+    private double totalBalance;
         
     private static final double GROUP_SIZE = 28.0; //max 28 students allowed in a group
-    private static final double COST_CREDIT = 110.0; //each credit costs $110.00
-    private static final int NUM_CREDITS = 5; //each class is worth 5 credits
+    public static final double COST_CREDIT = 110.0; //each credit costs $110.00
+    public static final int NUM_CREDITS = 5; //each class is worth 5 credits
 
     Department() {
         this(0,0,0,0.0);
     }
 
     Department(int totalStud110, int totalStud142, int totalStud143, double totalBalance) {
-
+        if(totalStud110 < 0 ||  totalStud142 < 0 || totalStud143 < 0) {
+            throw new IllegalArgumentException("Total students in any department cannot be less than zero");
+        }
+        
+        totalCSC110 = totalStud110;
+        totalCSC142 = totalStud142;
+        totalCSC143 = totalStud143;
+        this.totalBalance = totalBalance;
     }
 
     public int getTotalCSC110 () {
@@ -35,12 +43,13 @@ public class Department
         return totalCSC143;
     }
 
-    public double getTotalStudents() {
+    public int getTotalStudents() {
         return totalCSC110 + totalCSC142 + totalCSC143;
     }
 
     public double getTotalBalance() {
-        return getTotalStudents() * NUM_CREDITS * COST_CREDIT;
+        totalBalance = getTotalStudents() * NUM_CREDITS * COST_CREDIT;
+        return totalBalance;
     }
 
     public int getTotalGr110() {
@@ -57,14 +66,20 @@ public class Department
 
     @Override
     public String toString() {
-        String str = "Total Students Registered: " + getTotalStudents() + "\n";
-        str+= "CSC110 Students: " + getTotalCSC110() + "\n";
-        str+= "CSC142 Students: " + getTotalCSC142() + "\n";
-        str+= "CSC143 Students: " + getTotalCSC143() + "\n";
-        str += "Total Balance: " + String.format("%2f", getTotalBalance());
+        String str = "Total students in CSC110: " + getTotalCSC110() + " in " + getTotalGr110() + " groups " + "\n";
+        str+= "Total students in CSC142: " + getTotalCSC142() + " in " + getTotalGr142() + " groups " + "\n";
+        str+= "Total students in CSC143: " + getTotalCSC143() + " in " + getTotalGr143() + " groups " + "\n";
+        str += "Total Students in the department: " + getTotalStudents() + "\n";
+        str += "Total Balance: " + String.format("$%.2f", getTotalBalance()) + "\n";
         return str;
     }
 
+    /**
+     * A method to add a Student to the department
+     * It only lets them add one class per quarter
+     * 
+     * @param Student newStudent an instance of the Student class
+     */
     public void addStudent(Student newStudent) {
         //register to CSC110
         if(newStudent.getCSC110() && !(newStudent.getCSC142() || newStudent.getCSC143()) ) {
@@ -84,7 +99,67 @@ public class Department
     }
     
     public static void test() {
-    
+        Student testStudent = new Student("Bobo", "Chew", "12345");
+        Student testStudent2 = new Student("Nick", "Coyle", "950629671", false, true, false);
+        Department testDepartment = new Department();        
+        if(testDepartment.getTotalCSC110() != 0)  System.out.println("CSC110 should be 0, but was " + testDepartment.getTotalCSC110());
+        if(testDepartment.getTotalCSC142() != 0)  System.out.println("CSC142 should be 0, but was " + testDepartment.getTotalCSC142());
+        if(testDepartment.getTotalCSC143() != 0)  System.out.println("CSC143 should be 0, but was " + testDepartment.getTotalCSC143());
+        if(testDepartment.getTotalStudents() != 0) System.out.println("Total Students should be 0, but was " + testDepartment.getTotalStudents());
+        if(testDepartment.getTotalGr110() != 0) System.out.println("TotalGr110 should be 0, but was " + testDepartment.getTotalGr110());
+        if(testDepartment.getTotalGr142() != 0) System.out.println("TotalGr142 Students should be 0, but was " + testDepartment.getTotalGr142());
+        if(testDepartment.getTotalGr143() != 0) System.out.println("TotalGr143 Students should be 0, but was " + testDepartment.getTotalGr143());
+        if(testDepartment.getTotalBalance() != 0.0) System.out.println("Balance should be $0.00, but was " + String.format("$%.2f", testDepartment.getTotalBalance()));        
+        
+        testDepartment.addStudent(testStudent);
+        if(testDepartment.getTotalCSC110() != 0)  System.out.println("CSC110 should be 0, but was " + testDepartment.getTotalCSC110());
+        if(testDepartment.getTotalCSC142() != 0)  System.out.println("CSC142 should be 0, but was " + testDepartment.getTotalCSC142());
+        if(testDepartment.getTotalCSC143() != 0)  System.out.println("CSC143 should be 0, but was " + testDepartment.getTotalCSC143());
+        if(testDepartment.getTotalStudents() != 0) System.out.println("Total Students should be 0, but was " + testDepartment.getTotalStudents());
+        if(testDepartment.getTotalGr110() != 0) System.out.println("TotalGr110 should be 0, but was " + testDepartment.getTotalGr110());
+        if(testDepartment.getTotalGr142() != 0) System.out.println("TotalGr142 Students should be 0, but was " + testDepartment.getTotalGr142());
+        if(testDepartment.getTotalGr143() != 0) System.out.println("TotalGr143 Students should be 0, but was " + testDepartment.getTotalGr143());
+        if(testDepartment.getTotalBalance() != 0.0) System.out.println("Balance should be $0.00, but was " + String.format("$%.2f", testDepartment.getTotalBalance())); 
+        
+        testDepartment.addStudent(testStudent2);
+        if(testDepartment.getTotalCSC110() != 0)  System.out.println("CSC110 should be 0, but was " + testDepartment.getTotalCSC110());
+        if(testDepartment.getTotalCSC142() != 1)  System.out.println("CSC142 should be 1, but was " + testDepartment.getTotalCSC142());
+        if(testDepartment.getTotalCSC143() != 0)  System.out.println("CSC143 should be 0, but was " + testDepartment.getTotalCSC143());
+        if(testDepartment.getTotalStudents() != 1) System.out.println("Total Students should be 1, but was " + testDepartment.getTotalStudents());
+        if(testDepartment.getTotalGr110() != 0) System.out.println("TotalGr110 should be 0, but was " + testDepartment.getTotalGr110());
+        if(testDepartment.getTotalGr142() != 1) System.out.println("TotalGr142 Students should be 1, but was " + testDepartment.getTotalGr142());
+        if(testDepartment.getTotalGr143() != 0) System.out.println("TotalGr143 Students should be 0, but was " + testDepartment.getTotalGr143());
+        if(testDepartment.getTotalBalance() != 550.0) System.out.println("Balance should be $550.00, but was " + String.format("$%.2f", testDepartment.getTotalBalance())); 
+        
+        Department testDepartment2 = new Department(0, 1, 0, 550.0);        
+        if(testDepartment2.getTotalCSC110() != 0)  System.out.println("CSC110 should be 0, but was " + testDepartment2.getTotalCSC110());
+        if(testDepartment2.getTotalCSC142() != 1)  System.out.println("CSC142 should be 1, but was " + testDepartment2.getTotalCSC142());
+        if(testDepartment2.getTotalCSC143() != 0)  System.out.println("CSC143 should be 0, but was " + testDepartment2.getTotalCSC143());
+        if(testDepartment2.getTotalStudents() != 1) System.out.println("Total Students should be 1, but was " + testDepartment2.getTotalStudents());
+        if(testDepartment2.getTotalGr110() != 0) System.out.println("TotalGr110 should be 0, but was " + testDepartment2.getTotalGr110());
+        if(testDepartment2.getTotalGr142() != 1) System.out.println("TotalGr142 Students should be 1, but was " + testDepartment2.getTotalGr142());
+        if(testDepartment2.getTotalGr143() != 0) System.out.println("TotalGr143 Students should be 0, but was " + testDepartment2.getTotalGr143());
+        if(testDepartment2.getTotalBalance() != 550.0) System.out.println("Balance should be $550.00, but was " + String.format("$%.2f", testDepartment2.getTotalBalance()));        
+        
+        testDepartment2.addStudent(testStudent);
+        if(testDepartment2.getTotalCSC110() != 0)  System.out.println("CSC110 should be 0, but was " + testDepartment2.getTotalCSC110());
+        if(testDepartment2.getTotalCSC142() != 1)  System.out.println("CSC142 should be 1, but was " + testDepartment2.getTotalCSC142());
+        if(testDepartment2.getTotalCSC143() != 0)  System.out.println("CSC143 should be 0, but was " + testDepartment2.getTotalCSC143());
+        if(testDepartment2.getTotalStudents() != 1) System.out.println("Total Students should be 1, but was " + testDepartment2.getTotalStudents());
+        if(testDepartment2.getTotalGr110() != 0) System.out.println("TotalGr110 should be 0, but was " + testDepartment2.getTotalGr110());
+        if(testDepartment2.getTotalGr142() != 1) System.out.println("TotalGr142 Students should be 1, but was " + testDepartment2.getTotalGr142());
+        if(testDepartment2.getTotalGr143() != 0) System.out.println("TotalGr143 Students should be 0, but was " + testDepartment2.getTotalGr143());
+        if(testDepartment2.getTotalBalance() != 550.0) System.out.println("Balance should be $550.00, but was " + String.format("$%.2f", testDepartment2.getTotalBalance()));  
+        
+        testDepartment2.addStudent(testStudent2);
+        if(testDepartment2.getTotalCSC110() != 0)  System.out.println("CSC110 should be 0, but was " + testDepartment2.getTotalCSC110());
+        if(testDepartment2.getTotalCSC142() != 2)  System.out.println("CSC142 should be 2, but was " + testDepartment2.getTotalCSC142());
+        if(testDepartment2.getTotalCSC143() != 0)  System.out.println("CSC143 should be 0, but was " + testDepartment2.getTotalCSC143());
+        if(testDepartment2.getTotalStudents() != 2) System.out.println("Total Students should be 2, but was " + testDepartment2.getTotalStudents());
+        if(testDepartment2.getTotalGr110() != 0) System.out.println("TotalGr110 should be 0, but was " + testDepartment2.getTotalGr110());
+        if(testDepartment2.getTotalGr142() != 1) System.out.println("TotalGr142 Students should be 1, but was " + testDepartment2.getTotalGr142());
+        if(testDepartment2.getTotalGr143() != 0) System.out.println("TotalGr143 Students should be 0, but was " + testDepartment2.getTotalGr143());
+        if(testDepartment2.getTotalBalance() != 1100.0) System.out.println("Balance should be $1100.00, but was " + String.format("$%.2f", testDepartment2.getTotalBalance()));  
     }
 
 }

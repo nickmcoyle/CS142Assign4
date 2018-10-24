@@ -53,12 +53,29 @@ public class Student
     }
 
     public double getBalance() {
+        int numClasses = 0;
+        
+        if(CSC110) ++numClasses;
+        if(CSC142) ++numClasses;
+        if(CSC143) ++numClasses;
+        
+        balance = Department.COST_CREDIT * Department.NUM_CREDITS * numClasses;
         return balance;
     }
 
     @Override
     public String toString() {
-        return "Student " + firstName + " " + lastName;
+        String chosenClass = "CSC110";
+        if(CSC142) chosenClass = "CSC142";
+        if(CSC143) chosenClass = "CSC143";
+        
+        String str = "Student Name: " + firstName + " " + lastName + "\n";
+        str += "ID: " + id + "\n";
+        str += "The chosen class: " + chosenClass + "\n";
+        str += "Credits: " + Department.NUM_CREDITS + "\n";
+        str += "Credit Price: " + Department.COST_CREDIT + "\n";
+        str += "Total Balance: " + String.format("$%.2f", getBalance()) + "\n";
+        return str;
     }
 
     public void setFirstName(String firstName) {
@@ -88,18 +105,48 @@ public class Student
     }
 
     public void setCSC110(boolean csc110) {
+        if(csc110 && (CSC142 || CSC143)) {
+            throw new IllegalArgumentException("Student cannot choose more than 1 class");
+        }
+        
         this.CSC110 = csc110;
     }
 
     public void setCSC142(boolean csc142) {
+        if(csc142 && (CSC110 || CSC143)) {
+            throw new IllegalArgumentException("Student cannot choose more than 1 class");
+        }
+        
         this.CSC142 = csc142;
     }
 
     public void setCSC143(boolean csc143) {
+        if(csc143 && (CSC110 || CSC142)) {
+            throw new IllegalArgumentException("Student cannot choose more than 1 class");
+        }
+        
         this.CSC143 = csc143;
-    }
+    } 
 
     public static void test() {
-    
+        Student testStudent = new Student("Bobo", "Chew", "12345");
+        if(testStudent.getFirstName() != "Bobo")  System.out.println("ID should be Bobo, but was " + testStudent.getFirstName());
+        if(testStudent.getLastName() != "Chew")  System.out.println("ID should be Chew, but was " + testStudent.getLastName());        
+        if(testStudent.getID() != "12345")  System.out.println("ID should be 12345, but was " + testStudent.getID());
+        if(testStudent.getCSC110())  System.out.println("CSC110 should be false, but was " + testStudent.getCSC110());
+        if(testStudent.getCSC142())  System.out.println("CSC142 should be false, but was " + testStudent.getCSC142());
+        if(testStudent.getCSC143())  System.out.println("CSC143 should be false, but was " + testStudent.getCSC143());
+        if(testStudent.getBalance() != 0.0) System.out.println("Balance should be $0.00, but was " + String.format("$%.2f", testStudent.getBalance()));
+        
+        Student testStudent2 = new Student("Nick", "Coyle", "950629671", false, true, false); 
+        if(testStudent2.getFirstName() != "Nick")  System.out.println("ID should be Nick, but was " + testStudent.getFirstName());
+        if(testStudent2.getLastName() != "Coyle")  System.out.println("ID should be Coyle, but was " + testStudent.getLastName());
+        if(testStudent2.getID() != "950629671")  System.out.println("ID should be 950629671, but was " + testStudent.getID());
+        if(testStudent2.getCSC110())  System.out.println("CSC110 should be false, but was " + testStudent.getCSC110());
+        if(!testStudent2.getCSC142())  System.out.println("CSC142 should be true, but was " + testStudent.getCSC142());
+        if(testStudent2.getCSC143())  System.out.println("CSC143 should be false, but was " + testStudent.getCSC143());
+        if(testStudent2.getBalance() != 550.0) System.out.println("Balance should be $550.00, but was " + String.format("$%.2f", testStudent.getBalance()));
+        
+        //Student testStudent3 = new Student("Bobo", "ChewCoyle", "950629671", true, true, false); //should throw an exception and it does
     }
 }
