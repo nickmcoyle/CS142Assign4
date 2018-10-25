@@ -7,14 +7,15 @@
  */
 public class Department
 {
+    private static final double GROUP_SIZE = 28.0; //max 28 students allowed in a group
+    public static final double COST_CREDIT = 110.0; //each credit costs $110.00
+    public static final int NUM_CREDITS = 5; //each class is worth 5 credits 
+    
     private int totalCSC110;
     private int totalCSC142;
     private int totalCSC143;
-    private double totalBalance;
-        
-    private static final double GROUP_SIZE = 28.0; //max 28 students allowed in a group
-    public static final double COST_CREDIT = 110.0; //each credit costs $110.00
-    public static final int NUM_CREDITS = 5; //each class is worth 5 credits
+    private int totalStudents;
+    private double totalBalance;       
 
     Department() {
         this(0,0,0,0.0);
@@ -28,6 +29,7 @@ public class Department
         totalCSC110 = totalStud110;
         totalCSC142 = totalStud142;
         totalCSC143 = totalStud143;
+        totalStudents = totalCSC110 + totalCSC142 + totalCSC143;        
         this.totalBalance = totalBalance;
     }
 
@@ -44,11 +46,10 @@ public class Department
     }
 
     public int getTotalStudents() {
-        return totalCSC110 + totalCSC142 + totalCSC143;
+        return totalStudents;
     }
 
-    public double getTotalBalance() {
-        totalBalance = getTotalStudents() * NUM_CREDITS * COST_CREDIT;
+    public double getTotalBalance() {        
         return totalBalance;
     }
 
@@ -82,20 +83,23 @@ public class Department
      */
     public void addStudent(Student newStudent) {
         //register to CSC110
-        if(newStudent.getCSC110() && !(newStudent.getCSC142() || newStudent.getCSC143()) ) {
+        if(newStudent.getCSC110() && !newStudent.getCSC142() && !newStudent.getCSC143()) {
             ++totalCSC110;
+            ++totalStudents;
         }
         
          //register to CSC142
-        if(newStudent.getCSC142() && !(newStudent.getCSC110() || newStudent.getCSC143()) ) {
+        if(newStudent.getCSC142() && !newStudent.getCSC110() && !newStudent.getCSC143()) {
             ++totalCSC142;
+            ++totalStudents;
         }
         
          //register to CSC143
-        if(newStudent.getCSC143() && !(newStudent.getCSC110() || newStudent.getCSC142()) ) {
+        if(newStudent.getCSC143() && !newStudent.getCSC110() && !newStudent.getCSC142()) {
             ++totalCSC143;
+            ++totalStudents;
         }
-        
+        totalBalance = totalStudents * NUM_CREDITS * COST_CREDIT;
     }
     
     public static void test() {

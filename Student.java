@@ -25,7 +25,7 @@ public class Student
         setID(id);
         setCSC110(csc110);
         setCSC142(csc142);
-        setCSC143(csc143);
+        setCSC143(csc143);        
     }
 
     public String getFirstName() {
@@ -52,14 +52,7 @@ public class Student
         return CSC143;
     }
 
-    public double getBalance() {
-        int numClasses = 0;
-        
-        if(CSC110) ++numClasses;
-        if(CSC142) ++numClasses;
-        if(CSC143) ++numClasses;
-        
-        balance = Department.COST_CREDIT * Department.NUM_CREDITS * numClasses;
+    public double getBalance() {        
         return balance;
     }
 
@@ -98,7 +91,7 @@ public class Student
         if(id.equals(" ")) {
             throw new IllegalArgumentException("ID cannot be blank");
         } else if (!id.matches("[0-9]{5,}")) {
-            throw new IllegalArgumentException("ID is invalid, format must be like 111223333");
+            throw new IllegalArgumentException("ID is invalid, format must be like \"12345\"");
         }        
         
         this.id = id;
@@ -110,6 +103,7 @@ public class Student
         }
         
         this.CSC110 = csc110;
+        if(CSC110) balance = Department.COST_CREDIT * Department.NUM_CREDITS;
     }
 
     public void setCSC142(boolean csc142) {
@@ -118,6 +112,7 @@ public class Student
         }
         
         this.CSC142 = csc142;
+        if(CSC142) balance = Department.COST_CREDIT * Department.NUM_CREDITS;
     }
 
     public void setCSC143(boolean csc143) {
@@ -126,6 +121,7 @@ public class Student
         }
         
         this.CSC143 = csc143;
+        if(CSC143) balance = Department.COST_CREDIT * Department.NUM_CREDITS;
     } 
 
     public static void test() {
